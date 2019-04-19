@@ -2,26 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ToDoListItem from './ToDoListItem';
 
-class ToDoList extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      list: props.list,
-      deleteItem: props.deleteItem,
-    };
-  }
-
-  render() {
-    return (
-      <div>
-        <ul>
-          {this.state.list.map((item) => <ToDoListItem item={item} deleteItem={this.state.deleteItem} />)}
-        </ul>
-      </div>
-    );
-  }
-};
+// Fix: Stateful components will initialize once with props, but functional components will update with new props
+const ToDoList = (props) => (
+  <div>
+    {/* Fix: Add a key prop with a unique ID to remove warnings when dynamically generating components */}
+    <ul>
+      {props.list.map((item, index) => <ToDoListItem item={item} deleteItem={props.deleteItem} key={index} />)}
+    </ul>
+  </div>
+);
 
 ToDoList.propTypes = {
   list: PropTypes.arrayOf(PropTypes.string),

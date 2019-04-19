@@ -1,6 +1,7 @@
 import React from 'react';
 import Form from './Form';
-import ToDoList from 'ToDoList';
+// Fix: Files need './' to reference the current directory
+import ToDoList from './ToDoList';
 
 class App extends React.Component {
   constructor(props) {
@@ -11,12 +12,16 @@ class App extends React.Component {
       currentItem: '',
     };
 
+    // Fix: Callbacks need to be bound to component with state
+    this.itemChange = this.itemChange.bind(this);
     this.addItem = this.addItem.bind(this);
     this.deleteItem = this.deleteItem.bind(this);
   }
 
   componentDidMount() {
     fetch('http://localhost:8000/template.json')
+    // Fix: Data needs to be parsed
+      .then(res => res.json())
       .then(data => {
         this.setState({
           list: data.items,
@@ -31,8 +36,13 @@ class App extends React.Component {
   }
 
   addItem(e) {
-    this.state.list.push(this.state.currentItem);
-    document.getElementById('addItem').value = '';
+    // Fix: Cannot set state directly, use setState
+    this.setState({
+      list: this.state.list.concat([this.state.currentItem]),
+      currentItem: '',
+    }, () => {
+      document.getElementById('addItem').value = '';
+    });
   }
 
   deleteItem(e) {
